@@ -1,6 +1,7 @@
 import yfinance as yf
 import pandas as pd
 import psycopg2
+from psycopg2.extras import execute_values
 from datetime import datetime
 
 DB_CONFIG = {
@@ -16,19 +17,11 @@ def save_to_database(df):
         conn = psycopg2.connect(**DB_CONFIG)
         cursor = conn.cursor()
         
+        print("Sincronizando datos con PostgreSQL...")
+        
+        values = []
         for _, row in df.iterrows():
-            cursor.execute("""
-                INSERT INTO market_data (
-                    date, sp500_close, vix, sma_200, sma_125, drawdown_ath, 
-                    pe_ratio, cape_ratio, fed_liquidity_score, breadth_pct_above_200sma
-                ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-                ON CONFLICT (date) DO UPDATE SET
-                    sp500_close = EXCLUDED.sp500_close,
-                    vix = EXCLUDED.vix,
-                    sma_200 = EXCLUDED.sma_200,
-                    sma_125 = EXCLUDED.sma_125,
-                    drawdown_ath = EXCLUDED.drawdown_ath;
-            """, (
+            values.append((
                 row['date'],
                 float(row['sp500_close']),
                 float(row['vix']),
@@ -38,15 +31,29 @@ def save_to_database(df):
                 19.5, 26.0, 0.0, 45.0
             ))
             
+        query = """
+            INSERT INTO market_data (
+                date, sp500_close, vix, sma_200, sma_125, drawdown_ath, 
+                pe_ratio, cape_ratio, fed_liquidity_score, breadth_pct_above_200sma
+            ) VALUES %s
+            ON CONFLICT (date) DO UPDATE SET
+                sp500_close = EXCLUDED.sp500_close,
+                vix = EXCLUDED.vix,
+                sma_200 = EXCLUDED.sma_200,
+                sma_125 = EXCLUDED.sma_125,
+                drawdown_ath = EXCLUDED.drawdown_ath;
+        """
+        
+        execute_values(cursor, query, values)
         conn.commit()
         cursor.close()
         conn.close()
-        print("Datos de mercado guardados y sincronizados en PostgreSQL.")
+        print("¡Datos de mercado guardados y sincronizados con éxito en PostgreSQL!")
     except Exception as e:
         print(f"Error al guardar en la base de datos: {e}")
 
 def download_market_data():
-    print("Descargando y procesando datos de mercado...")
+    print("Descargando datos de Yahoo Finance...")
     
     sp500 = yf.download("^GSPC", period="max", interval="1d", progress=False)
     vix = yf.download("^VIX", period="max", interval="1d", progress=False)
@@ -81,3 +88,6 @@ def download_market_data():
     
     save_to_database(df)
     return df
+
+if __name__ == "__main__":
+    download_market_data()

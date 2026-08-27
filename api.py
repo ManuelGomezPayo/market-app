@@ -2,10 +2,8 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import psycopg2
 import asyncio
+import subprocess
 from main import get_latest_market_data, calculate_opportunity_score
-from backtest import run_backtest
-from scheduler import start_scheduler
-from update_job import update_all
 
 app = FastAPI(title="Market Opportunity API", version="1.0")
 
@@ -19,13 +17,14 @@ app.add_middleware(
 
 @app.on_event("startup")
 async def startup_event():
-    start_scheduler()
+    print("--- Servidor API iniciado. Actualizando datos de mercado... ---")
     try:
+        # Ejecuta el script fetch_data.py para actualizar los datos en PostgreSQL
         loop = asyncio.get_event_loop()
-        loop.run_in_executor(None, update_all)
-        print("--- Proceso de actualización lanzado en segundo plano ---")
+        await loop.run_in_executor(None, lambda: subprocess.run(["python", "fetch_data.py"], check=True))
+        print("--- ¡Datos actualizados correctamente a la fecha actual! ---")
     except Exception as e:
-        print(f"Error al lanzar la actualización en segundo plano: {e}")
+        print(f"Error al actualizar los datos en el arranque: {e}")
 
 def get_historical_market_data():
     try:
