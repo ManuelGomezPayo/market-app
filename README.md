@@ -1,101 +1,117 @@
 # Market App
 
-Aplicación Full-Stack de análisis y monitorización automatizada de datos de mercado. El sistema procesa métricas financieras, como el S&P 500 y el VIX, para calcular puntuaciones de oportunidad (*opportunity scores*) mediante un sistema de reglas.
+Full-stack application for automated market data analysis and monitoring. The system processes financial metrics, such as the S&P 500 and VIX, to calculate opportunity scores through a rule-based system. S&P 500 and VIX data are automatically updated on application startup; the rest of the data is entered manually.
 
-Los datos del S&P 500 y del VIX se actualizan automáticamente al iniciar la aplicación; el resto de datos se introducen manualmente.
+## Tech Stack
 
-## Tecnologías
+* Python
+* FastAPI
+* PostgreSQL
+* Next.js
+* TypeScript
 
-- Python
-- FastAPI
-- PostgreSQL
-- Next.js
-- TypeScript
+## Features
 
-## Funcionalidades
+* Automatic S&P 500 and VIX data updates on startup.
+* Market metrics processing.
+* Opportunity score calculation.
+* S&P 500 and VIX analysis.
+* Metrics visualization through the frontend.
 
-- Actualización automática de datos del S&P 500 y del VIX al iniciar la aplicación.
-- Procesamiento de métricas de mercado.
-- Cálculo de *opportunity scores*.
-- Análisis del S&P 500 y del VIX.
-- Visualización de métricas mediante el frontend.
+## Data Flow
 
-## Flujo de Datos
+Financial data
 
-```text
-Datos financieros
-       ↓
+↓
+
 fetch_data.py
-       ↓
+
+↓
+
 PostgreSQL
-       ↓
+
+↓
+
 engine.py
-       ↓
+
+↓
+
 Opportunity Score
-       ↓
+
+↓
+
 FastAPI
-       ↓
+
+↓
+
 Next.js
-       ↓
-Interfaz visual
-```
 
-## Cómo inicializar la aplicación
+↓
 
-### Requisitos previos
+Visual interface
 
-Asegúrate de tener instalado en tu sistema:
+## Getting Started
 
-- Python
-- Node.js
-- PostgreSQL
+### Prerequisites
 
-### 1. Configurar la base de datos
+Make sure you have the following installed:
 
-Abre tu terminal de PostgreSQL (o tu gestor habitual) y conéctate al servidor.
+* Python
+* Node.js
+* PostgreSQL
 
-Crea una base de datos nueva para el proyecto, por ejemplo:
+### 1. Set up the database
+
+Open your PostgreSQL terminal (or your preferred client) and connect to the server.
+
+Create a new database for the project, for example:
 
 ```sql
 CREATE DATABASE market_db;
+
 ```
 
-Asegúrate de configurar las credenciales de conexión (usuario, contraseña, host y puerto) en tu proyecto de Python para que la aplicación pueda conectarse a esta base de datos.
+Make sure to configure the connection credentials (user, password, host, and port) in your Python project so the application can connect to this database.
 
-### 2. Arrancar el Backend (FastAPI)
+### 2. Start the backend (FastAPI)
 
-Instala las dependencias de Python:
+Install the Python dependencies:
 
 ```bash
 pip install -r requirements.txt
+
 ```
 
-Inicia el servidor de FastAPI con Uvicorn:
+Start the FastAPI server with Uvicorn:
 
 ```bash
 uvicorn api:app --reload
+
 ```
 
-### 3. Arrancar el Frontend (Next.js)
+### 3. Start the frontend (Next.js)
 
-Entra en la carpeta del frontend:
+Go into the frontend folder:
 
 ```bash
 cd frontend
+
 ```
 
-Instala las dependencias de Node:
+Install the Node dependencies:
 
 ```bash
 npm install
+
 ```
 
-Arranca el entorno de desarrollo:
+Run the development server:
 
 ```bash
 npm run dev
+
 ```
 
-El frontend estará disponible en:
+The frontend will be available at:
 
-http://localhost:3000
+[http://localhost:3000](http://localhost:3000)
