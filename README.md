@@ -116,7 +116,7 @@ The frontend will be available at:
 
 [http://localhost:3000](http://localhost:3000)
 
-![Vista de la interfaz](images/captura1.png)
-![Vista de la interfaz](images/captura2.png)
-![Vista de la interfaz](images/captura3.png)
-![Vista de la interfaz](images/captura4.png)
+![Vista de la interfaz](images/Captura1.png)
+![Vista de la interfaz](images/Captura2.png)
+![Vista de la interfaz](images/Captura3.png)
+![Vista de la interfaz](images/Captura4.png)
